@@ -1,48 +1,39 @@
-import React, { useState } from 'react';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
-import AddItemButton from '../components/AddItemButton';
-import DeleteAllButton from '../components/DeleteAllButton';
-import DownloadButton from '../components/DownloadButton';
-import FileInputButton from '../components/FileInputButton';
-import ItemList from '../components/ItemList';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, View, Text, FlatList, Button, AsyncStorage, TouchableOpacity } from 'react-native';
 
-export default function HomeScreen() {
-  const [items, setItems] = useState([]);
-  const [total, setTotal] = useState(0);
+export default function HomeScreen({ navigation }) {
+  const [lists, setLists] = useState([]);
 
-  const addItem = (item) => {
-    setItems([...items, item]);
-    setTotal(total + parseFloat(item.amount));
+  useEffect(() => {
+    const loadLists = async () => {
+      const savedLists = await AsyncStorage.getItem('lists');
+      if (savedLists) {
+        setLists(JSON.parse(savedLists));
+      }
+    };
+    loadLists();
+  }, []);
+
+  const handleCreateList = () => {
+    navigation.navigate('ListScreen', { listId: null });
   };
 
-  const deleteAllItems = () => {
-    setItems([]);
-    setTotal(0);
-  };
-
-  const downloadData = () => {
-    const data = JSON.stringify({ items, total }, null, 2);
-    // Lógica para descargar el archivo JSON
-  };
-
-  const uploadData = (data) => {
-    const parsedData = JSON.parse(data);
-    setItems(parsedData.items);
-    setTotal(parsedData.total);
+  const handleSelectList = (listId) => {
+    navigation.navigate('ListScreen', { listId });
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.totalText}>Total: {total} €</Text>
+      <Button title="Crear Nueva Lista" onPress={handleCreateList} />
       <FlatList
-        data={items}
-        renderItem={({ item }) => <ItemList item={item} />}
-        keyExtractor={(item, index) => index.toString()}
+        data={lists}
+        renderItem={({ item }) => (
+          <TouchableOpacity onPress={() => handleSelectList(item.id)}>
+            <Text style={styles.listItem}>{item.name}</Text>
+          </TouchableOpacity>
+        )}
+        keyExtractor={(item) => item.id.toString()}
       />
-      <AddItemButton addItem={addItem} />
-      <DeleteAllButton deleteAllItems={deleteAllItems} />
-      <DownloadButton downloadData={downloadData} />
-      <FileInputButton uploadData={uploadData} />
     </View>
   );
 }
@@ -52,10 +43,11 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
   },
-  totalText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    marginVertical: 20,
+  listItem: {
+    padding: 15,
+    fontSize: 18,
+    borderBottomColor: '#ccc',
+    borderBottomWidth: 1,
   },
 });
+
