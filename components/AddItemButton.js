@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
+import { TextInput } from 'react-native-paper';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function AddItemButton({ addItem }) {
   const [name, setName] = useState('');
@@ -26,7 +28,9 @@ export default function AddItemButton({ addItem }) {
         onChangeText={setAmount}
         keyboardType="numeric"
       />
-      <Button title="Añadir ítem" onPress={handleAdd} />
+      <TouchableOpacity onPress={handleAdd} style={styles.button}>
+        <Ionicons name="add-circle-outline" size={24} color="green" />
+      </TouchableOpacity>
     </View>
   );
 }
@@ -45,4 +49,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
   },
+  button: {
+    padding: 10,
+  },
 });
+

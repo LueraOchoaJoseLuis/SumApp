@@ -1,25 +1,19 @@
 import React from 'react';
-import { Button, StyleSheet, View } from 'react-native';
-import * as DocumentPicker from 'expo-document-picker';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function FileInputButton({ uploadData }) {
-  const handleFilePick = async () => {
-    let result = await DocumentPicker.getDocumentAsync({});
-    if (result.type === 'success') {
-      const fileContent = await fetch(result.uri).then((res) => res.text());
-      uploadData(fileContent);
-    }
-  };
-
   return (
-    <View style={styles.buttonContainer}>
-      <Button title="Seleccionar archivo" onPress={handleFilePick} />
-    </View>
+    <TouchableOpacity onPress={uploadData} style={styles.button}>
+      <Ionicons name="cloud-upload-outline" size={24} color="purple" />
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    marginVertical: 10,
+  button: {
+    padding: 10,
   },
 });
+
+

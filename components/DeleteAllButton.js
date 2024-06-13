@@ -1,16 +1,17 @@
 import React from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import { TouchableOpacity, StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
 export default function DeleteAllButton({ deleteAllItems }) {
   return (
-    <View style={styles.buttonContainer}>
-      <Button title="Borrar Todo" onPress={deleteAllItems} />
-    </View>
+    <TouchableOpacity onPress={deleteAllItems} style={styles.button}>
+      <Ionicons name="trash-outline" size={24} color="red" />
+    </TouchableOpacity>
   );
 }
 
 const styles = StyleSheet.create({
-  buttonContainer: {
-    marginVertical: 10,
+  button: {
+    padding: 10,
   },
 });
